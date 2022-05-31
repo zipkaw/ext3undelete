@@ -37,6 +37,6 @@ unsigned int get_block_size(char *name);
 
 int extXdetector(struct ext2_super_block* super);
 
-struct ext2_group_desc read_gd(struct struct_ext2_filsys filsys, int fd, int group);
+struct ext2_group_desc read_gd(struct struct_ext2_filsys filsys, int fd, __u32 group);
 
 #endif //__EXT_SOURCE__

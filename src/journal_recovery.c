@@ -100,8 +100,8 @@ void inode_recover(int fd,
     {
         struct ext2_group_desc group_desc; 
         __u32 inodes_per_block = (filsys.blocksize / filsys.super->s_inode_size); 
-        __u32 index_of_group = (deleted_files[itr].inode_num) / filsys.inode_blocks_per_group; 
-        __u32 index_of_ino_table = (deleted_files[itr].inode_num) / inodes_per_block;  
+        __u32 index_of_group = (deleted_files[itr].inode_num) / filsys.super->s_inodes_per_group; 
+        __u32 index_of_ino_table = ((deleted_files[itr].inode_num) % filsys.super->s_inodes_per_group) / filsys.inode_blocks_per_group;  
         __u32 index_in_table = (deleted_files[itr].inode_num) % inodes_per_block;
         group_desc = read_gd(filsys, fd, index_of_group);
         /*calc inode table block num*/ 
@@ -127,7 +127,7 @@ void inode_recover(int fd,
             /*read tag*/
             tag = desc.d_tag;
             if (desc.d_header.h_magic == JOURNAL_MAGIC_NUMBER 
-                && desc.d_header.h_sequence == deleted_files[itr].seq 
+                && desc.d_header.h_sequence == deleted_files[itr].seq
                 && desc.d_header.h_blocktype == descriptor_block
                 )
             {

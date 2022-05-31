@@ -70,7 +70,7 @@ int extXdetector(struct ext2_super_block* super)
     return flag;
 }
 
-struct ext2_group_desc read_gd(struct struct_ext2_filsys filsys, int fd, int group)
+struct ext2_group_desc read_gd(struct struct_ext2_filsys filsys, int fd, __u32 group)
 {
     unsigned char buff_grp[filsys.blocksize];
     if (lseek(fd, (filsys.super->s_first_data_block + 1) * filsys.blocksize, 0) < 0)

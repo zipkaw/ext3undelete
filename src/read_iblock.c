@@ -295,10 +295,10 @@ int read_inode_blocks(struct ext2_inode inode,
                       struct struct_ext2_filsys filsys,
                       char file_name[])
 {
-    it size = inode.i_size;
-    it count_blk = size / filsys.blocksize;
-    it last_blk = size % filsys.blocksize;
-    if (count_blk == 0 && size)
+    size_t size = inode.i_size;
+    size_t count_blk = size / filsys.blocksize;
+    size_t last_blk = size % filsys.blocksize;
+    if ((count_blk == 0 && size))
     {
         count_blk += 1;
     }
@@ -308,13 +308,14 @@ int read_inode_blocks(struct ext2_inode inode,
         fprintf(stderr, "Create file error\n");
     }
     char *buff;
-    for (int i = 0; i < count_blk; i++)
+    for (int i = 0; i <= count_blk; i++)
     {
-        buff = read_inode_iblock(inode, fd, i, *filsys.super, filsys.blocksize);
+        buff = (char*)read_inode_iblock_u32(inode, fd, i, *filsys.super, filsys.blocksize);
         lseek(rec_file_fd, 0, SEEK_END);
-        if (i == count_blk - 1 && last_blk)
+        //size_t str_len = strlen(buff);
+        if ((i == (count_blk)))
         {
-             write(rec_file_fd, buff, last_blk);
+            write(rec_file_fd, buff, last_blk);
         }
         else
         {
@@ -322,7 +323,7 @@ int read_inode_blocks(struct ext2_inode inode,
         }
         free(buff);
     }
-    unsigned int writed_size = lseek(rec_file_fd, 0, SEEK_END);
+    it writed_size = lseek(rec_file_fd, 0, SEEK_END);
     if (writed_size == size)
     {
         printf("File:%s write success!\nBytes writed: %u\n\n", file_name, writed_size);
